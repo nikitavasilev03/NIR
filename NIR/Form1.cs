@@ -19,7 +19,7 @@ namespace NIR
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            хуй
+            int hui = 1234;
         }
     }
 }
