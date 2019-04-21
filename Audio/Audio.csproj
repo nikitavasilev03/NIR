@@ -33,10 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NAudio">
+    <Reference Include="NAudio, Version=1.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\OneDrive\Workspace\Visual Studio\Projects\mydll\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="PocketLibrary">
+    <Reference Include="PocketLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\OneDrive\Workspace\Visual Studio\Projects\mydll\PocketLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
