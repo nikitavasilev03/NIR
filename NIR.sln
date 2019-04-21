@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NIR", "NIR\NIR.csproj", "{457AEC4A-9F52-4FE3-B6BF-46C093AB4549}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audio", "Audio\Audio.csproj", "{90C26D51-B407-4166-8B42-A086AB8C5E6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{457AEC4A-9F52-4FE3-B6BF-46C093AB4549}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{457AEC4A-9F52-4FE3-B6BF-46C093AB4549}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{457AEC4A-9F52-4FE3-B6BF-46C093AB4549}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90C26D51-B407-4166-8B42-A086AB8C5E6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90C26D51-B407-4166-8B42-A086AB8C5E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90C26D51-B407-4166-8B42-A086AB8C5E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90C26D51-B407-4166-8B42-A086AB8C5E6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
