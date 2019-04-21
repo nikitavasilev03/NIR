@@ -22,11 +22,10 @@ namespace Audio
                 reader.Close();
             }
             double[] dataAplituds = readAmplitudeValues(buffer);
-
             prepare("Test1.wav");
         }
-        public static double[] prepare(string wavePath)
 
+        public static double[] prepare(string wavePath)
         {
             double[] data;
             byte[] wave;
@@ -49,7 +48,7 @@ namespace Audio
             int MSB, LSB; // старший и младший байты
             double[] data = new double[buffer.Length / 2];
 
-            for (int i = 0; i < data.Length; i += 2)
+            for (int i = 0; i < data.Length; i++)
             {
                 if (isBigEndian) // задает порядок байтов во входном сигнале
                 {
@@ -66,10 +65,8 @@ namespace Audio
                 }
                 // склеиваем два байта, чтобы получить 16-битное вещественное число
                 // все значения делятся на максимально возможное - 2^15
-                double x = (BitConverter.ToInt32(buffer, i * 2)); // 4294967296.0;
-                data[i] = ((MSB << 8) | LSB); // 32768.0;
+                data[i] = ((MSB << 8) | LSB) / 32768.0;
             }
-
             return data;
         }
     }
