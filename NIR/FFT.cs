@@ -1,72 +1,40 @@
 ﻿using System;
 using System.Numerics;
+using System.Collections.Generic;
 
 namespace Audio
 {
     public class FFT
     {
-        /// <summary>
-        /// Вычисление поворачивающего модуля e^(-i*2*PI*k/N)
-        /// </summary>
-        /// <param name="k"></param>
-        /// <param name="N"></param>
-        /// <returns></returns>
-        private static Complex w(int k, int N)
+        public static void fft(ref Complex[] data, bool invert = false)
         {
-            if (k % N == 0) return 1;
-            double arg = -2 * Math.PI * k / N;
-            return new Complex(Math.Cos(arg), Math.Sin(arg));
-        }
-        /// <summary>
-        /// Возвращает спектр сигнала
-        /// </summary>
-        /// <param name="x">Массив значений сигнала. Количество значений должно быть степенью 2</param>
-        /// <returns>Массив со значениями спектра сигнала</returns>
-        public static Complex[] fft(Complex[] x)
-        {
-            Complex[] X;
-            int N = x.Length;
-            if (N == 2)
+            int n = data.Length;
+            if (n == 1) return;
+
+            Complex[] a0 = new Complex[n / 2];
+            Complex[] a1 = new Complex[n / 2];
+            for (int i = 0, j = 0; i < n; i += 2, ++j)
             {
-                X = new Complex[2];
-                X[0] = x[0] + x[1];
-                X[1] = x[0] - x[1];
+                a0[j] = data[i];
+                a1[j] = data[i + 1];
             }
-            else
+            fft(ref a0, invert);
+            fft(ref a1, invert);
+
+            double ang = 2 * Math.PI / n * (invert ? -1 : 1);
+            Complex w = new Complex(1, 0);  
+            Complex wn = new Complex(Math.Cos(ang), Math.Sin(ang));
+            for (int i = 0; i < n / 2; ++i)
             {
-                Complex[] x_even = new Complex[N / 2];
-                Complex[] x_odd = new Complex[N / 2];
-                for (int i = 0; i < N / 2; i++)
+                data[i] = a0[i] + w * a1[i];
+                data[i + n / 2] = a0[i] - w * a1[i];
+                if (invert)
                 {
-                    x_even[i] = x[2 * i];
-                    x_odd[i] = x[2 * i + 1];
+                    data[i] /= 2;
+                    data[i + n / 2] /= 2;
                 }
-                Complex[] X_even = fft(x_even);
-                Complex[] X_odd = fft(x_odd);
-                X = new Complex[N];
-                for (int i = 0; i < N / 2; i++)
-                {
-                    X[i] = X_even[i] + w(i, N) * X_odd[i];
-                    X[i + N / 2] = X_even[i] - w(i, N) * X_odd[i];
-                }
+                w *= wn;
             }
-            return X;
-        }
-        /// <summary>
-        /// Центровка массива значений полученных в fft (спектральная составляющая при нулевой частоте будет в центре массива)
-        /// </summary>
-        /// <param name="X">Массив значений полученный в fft</param>
-        /// <returns></returns>
-        public static Complex[] nfft(Complex[] X)
-        {
-            int N = X.Length;
-            Complex[] X_n = new Complex[N];
-            for (int i = 0; i < N / 2; i++)
-            {
-                X_n[i] = X[N / 2 + i];
-                X_n[N / 2 + i] = X[i];
-            }
-            return X_n;
         }
 
         public static Complex[][] GetBlocks(Complex[] data, int size_block)
@@ -88,6 +56,31 @@ namespace Audio
                 blocks[i] = block;
             }
             return blocks;
+        }
+
+        public static Complex[] UnionBlocks(Complex[][] blocks)
+        {
+            List<Complex> data = new List<Complex>();
+            foreach (var block in blocks)
+                foreach (var item in block)
+                    data.Add(item);
+            return data.ToArray();
+        }
+
+        public static Complex[] RemoveImaginary(Complex[] data)
+        {
+            Complex[] outData = new Complex[data.Length];
+            for (int i = 0; i < data.Length; i++)
+                outData[i] = new Complex(data[i].Real, 0);
+            return outData;
+        }
+
+        public static double[] RemoveImaginaryToDouble(Complex[] data)
+        {
+            double[] outData = new double[data.Length];
+            for (int i = 0; i < data.Length; i++)
+                outData[i] = data[i].Real;
+            return outData;
         }
     }
 }
