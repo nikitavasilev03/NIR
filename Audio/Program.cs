@@ -30,5 +30,6 @@ namespace Audio
 
             Wave.Record("NewWav.wav", header, FFT.RemoveImaginaryToDouble(FFT.UnionBlocks(c_data_bloks)));
         }
+
     }
 }
