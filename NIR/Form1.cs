@@ -17,49 +17,69 @@ namespace NIR
 {
     public partial class Form1 : Form
     {
+        public const int SIZE_BLOCK = 1024;
+        public const string OUT_WAV_FILE = "newwav.wav";
+
+        private SoundPlayer playNew; //= new SoundPlayer("Test1.wav");
+        private SoundPlayer playOriginal; //= new SoundPlayer("NewWav.wav");
+        private string origenalFile;
+
         public Form1()
         {
             InitializeComponent();
         }
-
-        public const int SIZE_BLOCK = 1024;
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
         }
 
-        SoundPlayer playOld = new SoundPlayer("Test1.wav");
-        SoundPlayer playNewer = new SoundPlayer("NewWav.wav");
-
-        private void doMagic_Click(object sender, EventArgs e)
+        private void bSwitchFile_Click(object sender, EventArgs e)
         {
-            double[] data = Wave.Read("Test1.wav", out byte[] header);
-            Complex[] c_data = new Complex[data.Length];
-            for (int i = 0; i < c_data.Length; i++)
-                c_data[i] = new Complex(data[i], 0);
-            Complex[][] c_data_bloks = FFT.GetBlocks(c_data, SIZE_BLOCK);
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+                tbPathFileOriginal.Text = openFileDialog1.FileName;
+        }
 
-            for (int k = 0; k < c_data_bloks.Length; k++)
+        private void bOpenFile_Click(object sender, EventArgs e)
+        {
+            try
             {
-                Complex[] input_data = c_data_bloks[k];
-                FFT.fft(ref input_data);
-                for (int i = 0; i < input_data.Length; i++)
-                    input_data[i] += 0.4;
-                FFT.fft(ref input_data, true);
+                playOriginal = new SoundPlayer(tbPathFileOriginal.Text);
+                groupBox2.Enabled = true;
+                origenalFile = tbPathFileOriginal.Text;
             }
-
-            Wave.Record("NewWav.wav", header, FFT.RemoveImaginaryToDouble(FFT.UnionBlocks(c_data_bloks)));
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void playOriginal_Click(object sender, EventArgs e)
         {
-            playOld.Play();
+            if (playOriginal != null)
+                playOriginal.Play();
+            else
+                MessageBox.Show("Файл не открыт!");
         }
 
-        private void playNew_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
-            playNewer.Play();
+            if (!int.TryParse(comboBox1.Text, out int size_block))
+            {
+                MessageBox.Show("Неверный ввод данных!");
+                return;
+            }
+            if (!double.TryParse(textBox2.Text, out double chageVal))
+                chageVal = 0;
+            Convertor.Convert(origenalFile, OUT_WAV_FILE, size_block, chageVal);
+            playNew = new SoundPlayer(OUT_WAV_FILE);
+            groupBox4.Enabled = true;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (playNew != null)
+                playNew.Play();
         }
     }
 }
