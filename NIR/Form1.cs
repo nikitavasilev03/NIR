@@ -72,6 +72,9 @@ namespace NIR
             if (!double.TryParse(textBox2.Text, out double chageVal))
                 chageVal = 0;
             Convertor.Convert(origenalFile, OUT_WAV_FILE, size_block, chageVal);
+
+            
+
             playNew = new SoundPlayer(OUT_WAV_FILE);
             groupBox4.Enabled = true;
         }
