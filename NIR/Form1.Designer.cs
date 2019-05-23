@@ -242,7 +242,7 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
+            chartArea1.Name = "Default";
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);

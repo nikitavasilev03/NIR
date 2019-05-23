@@ -15,7 +15,7 @@ namespace Audio
             byte[] buffer = new byte[allBytes.Length - HEADER_LENGTH]; //Байтовое представление .wav файла 
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = allBytes[i + HEADER_LENGTH]; //Считваем все байты файла
-            return readAmplitudeValues(buffer); //Получаем и возвращаем значения амплитуд
+            return BytesToAmplitudes(buffer); //Получаем и возвращаем значения амплитуд
         }
 
         public static double[] Read(string path, out byte[] header) //Чтение файла WAV и возвращение амплитудных занчений от -1 до 1 
@@ -27,12 +27,12 @@ namespace Audio
                 header[i] = allBytes[i]; //Считываем все байты заголовка
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = allBytes[i + HEADER_LENGTH]; //Считваем все байты файла
-            return readAmplitudeValues(buffer); //Получаем и возвращаем значения амплитуд
+            return BytesToAmplitudes(buffer); //Получаем и возвращаем значения амплитуд
         }
 
         public static void Record(string path, byte[] header, double[] data)
         {
-            Record(path, header, amplitudesToBytes(data));
+            Record(path, header, AmplitudesToBytes(data));
         }
 
         public static void Record(string path, byte[] header, byte[] buffer)
@@ -45,7 +45,7 @@ namespace Audio
             File.WriteAllBytes(path, allBytes);
         }
 
-        private static double[] readAmplitudeValues(byte[] buffer) //Получение амплитудных значений в промежутке от -1 до 1
+        public static double[] BytesToAmplitudes(byte[] buffer) //Получение амплитудных значений в промежутке от -1 до 1
         {
             short MSB, LSB; // старший и младший байты
             double[] amplitudes = new double[buffer.Length / 2];
@@ -66,7 +66,7 @@ namespace Audio
             return amplitudes;
         }
 
-        private static byte[] amplitudesToBytes(double[] amplitudes) //Получение амплитудных значений в промежутке от -1 до 1
+        public static byte[] AmplitudesToBytes(double[] amplitudes) //Получение амплитудных значений в промежутке от -1 до 1
         {
             byte[] buffer = new byte[amplitudes.Length * 2];
             for (int i = 0; i < amplitudes.Length; i++)
