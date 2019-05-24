@@ -24,6 +24,9 @@ namespace NIR
         private SoundPlayer playOriginal; //= new SoundPlayer("NewWav.wav");
         private string originalFile;
 
+        private delegate double windowFunc(double i, double framesize);
+        private windowFunc winFunc = WindowFunc.Rectangle; 
+
         public Form1()
         {
             InitializeComponent();
@@ -71,7 +74,7 @@ namespace NIR
             }
             if (!double.TryParse(textBox2.Text, out double chageVal))
                 chageVal = 0;
-           
+
             double[] data = Wave.Read(originalFile, out byte[] header);
             Complex[] c_data = new Complex[data.Length];
             for (int i = 0; i < c_data.Length; i++)
@@ -81,14 +84,20 @@ namespace NIR
             {
                 Complex[] input_data = c_data_bloks[k];
                 FFT.fft(ref input_data);
+                if (checkBox1.Checked)
+                    for (int i = 0; i < input_data.Length; i++)
+                        input_data[i] /= input_data.Length;
+                for (int i = 0; i < input_data.Length; i++)
+                    input_data[i] *= winFunc(i, input_data.Length);
+
             }
 
-                var out_block = c_data_bloks[0];
+            var out_block = c_data_bloks[0];
             double[] indexes = new double[out_block.Length];
             double[] values = new double[out_block.Length];
             for (int i = 0; i < indexes.Length; i++)
             {
-                indexes[i] = i;
+                indexes[i] = i + 1;
                 values[i] = out_block[i].Magnitude;
             }
 
@@ -98,16 +107,13 @@ namespace NIR
             chart1.Series["BlockFFT"].ChartType = SeriesChartType.Column;
             chart1.Series["BlockFFT"].Points.DataBindXY(indexes, values);
 
-
             for (int k = 0; k < c_data_bloks.Length; k++)
             {
                 Complex[] input_data = c_data_bloks[k];
-                //for (int i = 0; i < input_data.Length; i++)
-                //    input_data[i] *= 0.5 * (1 - Cos(2 * PI * i / (data.Length - 1)));
                 FFT.fft(ref input_data, true);
             }
-            Wave.Record(OUT_WAV_FILE, header, FFT.RemoveImaginaryToDouble(FFT.UnionBlocks(c_data_bloks)));
 
+            Wave.Record(OUT_WAV_FILE, header, FFT.RemoveImaginaryToDouble(FFT.UnionBlocks(c_data_bloks)));
 
             playNew = new SoundPlayer(OUT_WAV_FILE);
             groupBox4.Enabled = true;
@@ -117,6 +123,36 @@ namespace NIR
         {
             if (playNew != null)
                 playNew.Play();
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+                winFunc = WindowFunc.Rectangle;
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton2.Checked)
+                winFunc = WindowFunc.Gausse;
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton3.Checked)
+                winFunc = WindowFunc.Hamming;
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton4.Checked)
+                winFunc = WindowFunc.Hann;
+        }
+
+        private void radioButton5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton5.Checked)
+                winFunc =  WindowFunc.BlackmannHarris;
         }
     }
 }
