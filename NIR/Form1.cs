@@ -17,11 +17,10 @@ namespace NIR
 {
     public partial class Form1 : Form
     {
-        public const int SIZE_BLOCK = 1024;
         public const string OUT_WAV_FILE = "newwav.wav";
 
-        private SoundPlayer playNew; //= new SoundPlayer("Test1.wav");
-        private SoundPlayer playOriginal; //= new SoundPlayer("NewWav.wav");
+        private SoundPlayer playNew;
+        private SoundPlayer playOriginal; 
         private string originalFile;
 
         private delegate double windowFunc(double i, double framesize);
@@ -125,31 +124,31 @@ namespace NIR
                 playNew.Play();
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void radioButton1_CheckedChanged(object sender, EventArgs e) // прямоугольник
         {
             if (radioButton1.Checked)
                 winFunc = WindowFunc.Rectangle;
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void radioButton2_CheckedChanged(object sender, EventArgs e) // гаусс
         {
             if (radioButton2.Checked)
                 winFunc = WindowFunc.Gausse;
         }
 
-        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        private void radioButton3_CheckedChanged(object sender, EventArgs e) // химмниг
         {
             if (radioButton3.Checked)
                 winFunc = WindowFunc.Hamming;
         }
 
-        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        private void radioButton4_CheckedChanged(object sender, EventArgs e) // ханн
         {
             if (radioButton4.Checked)
                 winFunc = WindowFunc.Hann;
         }
 
-        private void radioButton5_CheckedChanged(object sender, EventArgs e)
+        private void radioButton5_CheckedChanged(object sender, EventArgs e) // блэкман
         {
             if (radioButton5.Checked)
                 winFunc =  WindowFunc.BlackmannHarris;
